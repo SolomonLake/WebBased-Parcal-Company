@@ -1,0 +1,302 @@
+﻿
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parcel</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <script src="js/vendor/modernizr.js"></script>
+  </head>
+  <body>
+    
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>Best parcel delivery company!</h1>
+      </div>
+    </div>
+    
+
+
+    <div class="row">
+      <div class="large-8 medium-8 columns">
+        <h5>Instructions:</h5>
+        <!-- Grid Example -->
+
+        <div class="row">
+          <div class="large-12 columns">
+            <div class="callout panel">
+             <ul>
+				<li>Enter the weight and monetary value of your package.</li>
+				<li>Next, select which city you would like to send your package to.</li>
+				<li>We also offer insurance, high-risk insurance may cost more with higher value items.</li>
+				<li>Hit calculate to see the total cost.</li>
+				<li>Then, when ready, fill out personal information and submit your order for processing.</li>
+			 </ul>
+            </div>
+          </div>
+        </div>
+
+        <form data-abide>
+				  
+				  <div class="row">
+				    <div class="large-12 medium-12 columns">
+				      <div class="row collapse">
+				        <label>Weight</label>
+				        <div class="small-9 columns">
+						<div class="name-field"> <label>
+				          <input type="text" class="weight" name="weight" placeholder="Enter weight in grams"   />
+						   </label>
+						   <small class="error">Weight must be entered in numbers.</small>
+						    </div>
+				        </div>
+				        <div class="small-3 columns">
+				          <span class="postfix">grams</span>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+				  <div class="row">
+				    <div class="large-12 medium-12 columns">
+				      <div class="row collapse">
+				        <label>Item Value</label>
+				        <div class="small-9 columns">
+						<div class="name-field"> <label>
+				          <input type="text" class="itemvalue" name="itemvalue" placeholder="Enter the value of your item in pounds"   />
+						   </label>
+						   <small class="error">Value must be entered in numbers.</small>
+						    </div>
+				        </div>
+				        <div class="small-3 columns">
+				          <span class="postfix">pounds</span>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+				  <div class="row">
+				    <div class="large-12 columns">
+				      <label>Please select destination</label>
+				      <select name="city" class="city">
+				        <option value="Edinburgh">Edinburgh</option>
+				        <option value="Stirling">Stirling</option>
+				        <option value="Liverpool">Liverpool</option>
+				      </select>
+				    </div>
+				  </div>
+				
+				<div class="row">
+				  <div class="large-12 columns">
+				  <h4>Prices:</h4>
+					<div class="callout panel">
+					
+					  <label><b>Insurance</b></label>
+					  <input id="insurance1" value="0" name="insurance" checked type="radio"><label for="insurance1">No Insurance</label>
+					  <input id="insurance2" value="1" name="insurance" type="radio"><label for="insurance2">Insurance</label>
+					  <input id="insurance3" value="2" name="insurance" type="radio"><label for="insurance3">High-Risk</label>
+					
+					<p class="results">Please select city and enter weight of your package</p>
+					</div>
+				  </div>
+				</div>
+				<div>
+					<a href="#" onclick="calculate();" class="button">Calculate</a>
+				</div>
+				<div class="row">
+				    <div class="large-12 medium-12 columns">
+				      <div class="row collapse">
+				        <label>Name</label>
+				        <div class="small-9 columns">
+						<div class="name-field"> <label>
+				          <input type="text" class="name" name="name" placeholder="Enter full name"   />
+						   </label>
+						    </div>
+				        </div>
+				      </div>
+				    </div>
+				 </div>
+				 <div class="row">
+				    <div class="large-12 medium-12 columns">
+				      <div class="row collapse">
+				        <label>Email address</label>
+				        <div class="small-9 columns">
+						<div class="name-field"> <label>
+				          <input type="text" class="email" name="email" placeholder="Enter valid email address"   />
+						   </label>
+						    </div>
+				        </div>
+				      </div>
+				    </div>
+				 </div>
+				<a href="#" onclick="submit();" class="button">Submit</a>
+				</form>
+      </div>     
+    </div>
+    
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+		<script>
+            function IsEmail(email) {
+              var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+              return regex.test(email);
+            }
+		//NEED TO IMPLEMENT "SUBMIT" FUNCTION WHICH SENDS USER AN EMAIL
+		//Can use input of "name" and "email" to send an email that starts with their name and a random number when
+            function submit(){
+                if(globalprice){  
+                    var name = $(".name").val();
+                    var email = $(".email").val();
+                    if((!IsEmail(email)) || name.length < 1){
+                         alert('Please fill all fields');
+                    }else{
+                         var menuId = $( "ul.nav" ).first().attr( "id" );
+var request = $.ajax({
+  url: "email.php",
+  type: "POST",
+  data: { email : email, name: name, amount: globalprice  },
+  dataType: "html"
+});
+ 
+request.done(function( msg ) {
+  alert('Please check your email for a bill. It should be there in a minute');
+});
+ 
+request.fail(function( jqXHR, textStatus ) {
+  alert( "Request failed: " + textStatus );
+});
+                    }
+                }else{
+                    alert('Please calculate price of delivery at first');   
+                }
+            }
+            
+            
+			//submit is clicked...
+	var weight=0;
+	var itemvalue=0;
+	var insuranceID = 0;
+	var city = $( ".city" ).val();
+		$( ".weight" ).change(function () {
+			weight = $( ".weight" ).val();
+		});
+		$(".itemvalue").change(function () {
+			itemvalue = $(".itemvalue").val();
+		});
+		$(".city").change(function () {
+			city = $( ".city" ).val();
+		});
+		var price;
+	
+	var globalprice;
+	function calculate(){
+		if(($.isNumeric(weight) == false) || ($.isNumeric(itemvalue) == false)){
+			alert('Both item weight and item value must be entered in numerical value');
+		}
+        if(weight == 0){
+			alert('Please enter weight');
+            return;
+		}
+	
+		if(city == 'Edinburgh'){
+			if(weight <= 500){
+				price = 3.50;
+			}else{
+				if(weight > 2000){
+					if(weight <= 2500){
+						price = 9.5;
+					}else{
+						var overWeight = weight-2500;
+						var times  = overWeight/250;
+						var price = 9.50+(0.5*Math.ceil(times));
+					}
+				}else{
+					var overWeight = weight-500;
+					var times  = overWeight/250;
+					var price = 3.50+(0.8*Math.ceil(times));
+				}
+			}
+		}else if(city == 'Stirling'){
+			if(weight <= 500){
+				price = 4.50;
+			}else{
+				if(weight > 2000){
+					if(weight <= 2500){
+						price = 16;
+					}else{
+						var overWeight = weight-2500;
+						var times  = overWeight/500;
+						var price = 16+(2*Math.ceil(times));
+					}
+				}else{
+					var overWeight = weight-500;
+					var times  = overWeight/250;
+					var price = 4.50+(1*Math.ceil(times));
+				}
+			}
+		}
+		else if(city == 'Liverpool'){
+			if(weight <= 500){
+				price = 6.00;
+			}else{
+				if(weight > 2000){
+					if(weight <= 2500){
+						price = 21.00;
+					}else{
+						var overWeight = weight-2500;
+						var times  = overWeight/500;
+						var price = 21+(3*Math.ceil(times));
+					}
+				}else{
+					var overWeight = weight-500;
+					var times  = overWeight/250;
+					var price = 6+(1.5*Math.ceil(times));
+				}
+			}
+		}
+		else{
+			alert('Not today')
+		}
+		globalvalue = itemvalue;
+		globalprice = price;
+		insurance(); //function call here displays the price
+		
+		
+		//$(".results").html('<b>Price: </b>£'+price);
+		
+		 //$(".results").html(city);
+	}
+	
+		$( "#insurance1, #insurance2, #insurance3" ).change(function () {
+			insuranceID = $(this).val();
+			calculate();
+		});
+	function insurance () {
+        if(globalvalue > 100000){
+         alert("We do not insure items that worth is over £100 000");
+            return;
+        }
+		if(insuranceID == 1){
+			if(globalvalue*.0015 >= 1.5){
+				$(".results").html('<b>Price: </b>£'+(globalprice+globalvalue*.0015).toFixed(2));
+				//alert('a'+globalvalue*1.0015)
+			}else{
+				$(".results").html('<b>Price: </b>£'+(globalprice+1.5).toFixed(2));
+				//alert('b'+globalvalue+1.5)
+			}
+		}
+		else if(insuranceID == 2){
+			if(globalvalue*.0215 >= 3){
+				$(".results").html('<b>Price: </b>£'+(globalprice+globalvalue*.0215).toFixed(2));
+			}else{
+				$(".results").html('<b>Price: </b>£'+(globalprice+3).toFixed(2));
+			}
+		}else{
+			$(".results").html('<b>Price: </b>£'+globalprice.toFixed(2));
+		}
+	}
+
+			
+
+	
+	</script>
+  </body>
+</html>
